@@ -458,7 +458,7 @@ figure {
 }
 
 figure+figure pre:first-child,
-frame+pre,
+iframe+pre,
 pre+pre {
 	margin-top: -1px;
 }
