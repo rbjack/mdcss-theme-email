@@ -1,3 +1,22 @@
+(function() {
+	var throttle = function(type, name, obj) {
+		obj = obj || window;
+		var running = false;
+		var func = function() {
+			if (running) { return; }
+			running = true;
+			requestAnimationFrame(function() {
+				obj.dispatchEvent(new CustomEvent(name));
+				running = false;
+			});
+		};
+		obj.addEventListener(type, func);
+	};
+
+	/* init - you can init any event */
+	throttle("optimizedResize");
+})();
+
 examples.lang = {
 	color: function (pre, value) {
 		var colors = pre.parentNode.insertBefore(document.createElement('div'), pre);
@@ -119,22 +138,28 @@ examples.lang = {
 		var documentElement = idoc.documentElement;
 		var scrollHeight;
 
+		// function resize() {
+		// 	var currentScrollHeight = documentElement.scrollHeight;
+
+		// 	if (scrollHeight !== currentScrollHeight) {
+		// 		scrollHeight = currentScrollHeight;
+
+		// 		style.height = 0;
+
+		// 		style.height = documentElement.scrollHeight + (iframe.offsetHeight - iwin.innerHeight) + 'px';
+		// 	}
+		// }
+
 		function resize() {
-			var currentScrollHeight = documentElement.scrollHeight;
-
-			if (scrollHeight !== currentScrollHeight) {
-				scrollHeight = currentScrollHeight;
-
-				style.height = 0;
-
-				style.height = documentElement.scrollHeight + (iframe.offsetHeight - iwin.innerHeight) + 'px';
-			}
+			style.height = 0;
+			style.height = documentElement.scrollHeight + (iframe.offsetHeight - iwin.innerHeight) + 'px';
 		}
 
 		iwin.addEventListener('load', resize);
 
 		resize();
 
-		setInterval(resize, 334);
+		iwin.addEventListener('optimizedResize', resize);
+		//setInterval(resize, 334);
 	}
 };
